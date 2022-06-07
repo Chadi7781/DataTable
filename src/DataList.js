@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import BootstrapTable from "react-bootstrap-table-next";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.css";
 import paginationFactory from "react-bootstrap-table2-paginator";
@@ -8,8 +9,13 @@ import paginationFactory from "react-bootstrap-table2-paginator";
 import "react-bootstrap-table2-paginator/dist/react-bootstrap-table2-paginator.min.css";
 import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
 import "react-bootstrap-table2-filter/dist/react-bootstrap-table2-filter.min.css";
+
+import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
+
 const DataList = () => {
   const [userList, setUserList] = useState([]);
+
+  const { SearchBar } = Search;
 
   const columns = [
     {
@@ -19,20 +25,17 @@ const DataList = () => {
     {
       dataField: "name",
       text: "Name",
-      sort: true,
-      filter: textFilter()
+      sort: true
     },
     {
       dataField: "username",
       text: "Username",
-      sort: true,
-      filter: textFilter()
+      sort: true
     },
     {
       dataField: "email",
       text: "Email",
-      sort: true,
-      filter: textFilter()
+      sort: true
     }
   ];
 
@@ -63,14 +66,24 @@ const DataList = () => {
   }, []);
   return (
     <div>
-      <BootstrapTable
-        bootstrap4
-        keyField="id"
-        columns={columns}
-        data={userList}
-        pagination={pagination}
-        filter={filterFactory()}
-      />
+      <ToolkitProvider keyField="id" data={userList} columns={columns} search>
+        {(props) => (
+          <div>
+            <h3>Input something at below input field:</h3>
+            <SearchBar {...props.searchProps} />
+            <hr />
+            <BootstrapTable
+              bootstrap4
+              keyField="id"
+              columns={columns}
+              data={userList}
+              pagination={pagination}
+              {...props.baseProps}
+            />
+          </div>
+        )}
+      </ToolkitProvider>
+
       {/* <table>
         <tr>
           <th>Id</th>
